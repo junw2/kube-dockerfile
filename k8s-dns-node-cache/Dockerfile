@@ -1,2 +1,2 @@
-FROM k8s-dns-node-cache:1.15.12
+FROM k8s.gcr.io/k8s-dns-node-cache:1.15.12
 MAINTAINER Q
