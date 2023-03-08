@@ -1,0 +1,24 @@
+def VERSION
+pipeline {
+    agent any
+    stages {
+
+        stage('Build Docker Image') {
+            steps {
+                echo "Build docker image."
+                script {
+                    sh "cd $SERVICE_ID; /usr/bin/docker build . -t $DOCKER_REGISTRY/dcaas/$SERVICE_ID:$VERSION-$BUILD_NUMBER --build-arg VERSION=$VERSION-SNAPSHOT"
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                echo "Push docker image to $DOCKER_REGISTRY."
+                sh "/usr/bin/docker tag $DOCKER_REGISTRY/dcaas/$SERVICE_ID:$VERSION-$BUILD_NUMBER $DOCKER_REGISTRY/dcaas/$SERVICE_ID:latest"
+                sh "/usr/bin/docker push $DOCKER_REGISTRY/dcaas/$SERVICE_ID:$VERSION-$BUILD_NUMBER"
+                sh "/usr/bin/docker push $DOCKER_REGISTRY/dcaas/$SERVICE_ID:latest"
+            }
+        }
+    }
+}
